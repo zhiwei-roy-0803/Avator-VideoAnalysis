@@ -2,6 +2,8 @@ import os
 # Configure
 with open(os.path.join(os.pardir, "models", "yolo3", "coco.names"), "r") as fp:
     coco_class = fp.read().split("\n")[:-1]
+
+### The Following Parameters Are Confihurable
 # RPC server host
 # RPC_SERVICE_HOST = "162.105.85.250"
 RPC_SERVICE_HOST = "localhost"
@@ -17,3 +19,4 @@ yolo_hyperparameters = {
     "nms_thres": 0.4,
     "img_size": 416
 }
+# Add hyper-parameeters for other DL models here in the future...

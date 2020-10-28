@@ -1,7 +1,5 @@
 # Avator-VideoAnalysis
 
-A video object detection project that takes the video which is uploaded by the user and does object
-detection based on [Yolo v3](https://github.com/eriklindernoren/PyTorch-YOLOv3).
 
 **How to install**
 
