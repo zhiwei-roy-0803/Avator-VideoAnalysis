@@ -45,24 +45,28 @@ class Api2MslServicer(api2msl_pb2_grpc.Api2MslServicer):
         self.face_detector = face_detection
 
     def GetJson(self, request, context):
+        '''
+        Provide gRPC service
+        :param request: request.buf-encoded jpg bytes stream
+        :param context:
+        :return:
+        '''
         print("Start Serving Incoming Request")
-        # 这里request.buf里面是经过jpg编码之后的一帧图像
+        # request.buf里面是经过jpg编码之后的一帧图像
         img = cv2.imdecode(np.fromstring(request.buf, dtype=np.uint8), -1)
         det = {}
         # Run object detection with Yolo v3
         print("Run Yolo Detector")
         det["yolo"] = self.yolo_detector.detect(img) # return a dict that contains detection result
+        print("Run Face Detector")
         det["face"] = self.face_detector(img)
-        # Run face detection with ...
-        # det.update(self.face_detector.detect(img))
-        # print
         print("Processing Done!")
         return api2msl_pb2.JsonReply(json=json.dumps(det))
 
 
 def main():
     # gRPC server configurations
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=4))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=8))
     api2msl_pb2_grpc.add_Api2MslServicer_to_server(Api2MslServicer(), server)
     server.add_insecure_port('[::]:50051')
     server.start()

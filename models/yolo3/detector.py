@@ -2,9 +2,9 @@ from __future__ import division
 import os, sys
 sys.path.append(os.path.pardir)
 import torch.nn as nn
-from models.utils.parse_config import *
-from models.utils.utils import build_targets, to_cpu, non_max_suppression, rescale_boxes, load_classes
-from models.utils.datasets import *
+from .utils.parse_config import *
+from .utils.utils import build_targets, to_cpu, non_max_suppression, rescale_boxes, load_classes
+from .utils.datasets import *
 import torchvision.transforms as transforms
 
 def create_modules(module_defs):
