@@ -6,6 +6,7 @@ from .utils.parse_config import *
 from .utils.utils import build_targets, to_cpu, non_max_suppression, rescale_boxes, load_classes
 from .utils.datasets import *
 import torchvision.transforms as transforms
+from config import coco_class
 
 def create_modules(module_defs):
     """
@@ -239,7 +240,7 @@ class Darknet(nn.Module):
         self.conf_thres = conf_thres
         self.nms_thres = nms_thres
         # Extracts class labels from file
-        self.classes = load_classes(class_path)
+        self.classes = coco_class
         # device for the model
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

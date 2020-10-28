@@ -8,24 +8,23 @@ import grpc
 import numpy as np
 import torch
 from proto import api2msl_pb2, api2msl_pb2_grpc
-from models.Yolo3 import Darknet
+from models.yolo3.detector import Darknet
 import face_recognition
+from config import device_allocation, yolo_hyperparameters
 # Time constant
-_ONE_DAY_IN_SECONDS = 24 * 60 * 60
-# Some hyper-parameter used in Yolo v3 model
-conf_thres = 0.8
-nms_thres = 0.4
-batch_size = 1
-img_size = 416
-
+_ONE_HOUR_IN_SECONDS = 24 * 60
 
 def load_yolo3():
     # Path for model configuration and pre-trained weight for YOLO model
-    model_def = "../config/yolov3.cfg"
-    weights_path = os.path.join(os.path.pardir, "models", "weights", "yolov3.weights")
-    class_path = "../config/coco.names"
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = Darknet(model_def, img_size=img_size, conf_thres=conf_thres, nms_thres=nms_thres, class_path=class_path).to(device)
+    par_dir = os.path.abspath(os.path.pardir)
+    model_def = os.path.join(par_dir, "models", "yolo3", "yolov3.cfg")
+    weights_path = os.path.join(par_dir, "models", "yolo3", "weights", "yolov3.weights")
+    class_path = os.path.join(par_dir, "models", "yolo3", "coco.name")
+    model = Darknet(model_def,
+                    img_size=yolo_hyperparameters["img_size"],
+                    conf_thres=yolo_hyperparameters["conf_thres"],
+                    nms_thres=yolo_hyperparameters["nms_thres"],
+                    class_path=class_path).to(device_allocation["yolo3"])
     if weights_path.endswith(".weights"):
         model.load_darknet_weights(weights_path)
     else:
@@ -52,10 +51,10 @@ class Api2MslServicer(api2msl_pb2_grpc.Api2MslServicer):
         :return:
         '''
         print("Start Serving Incoming Request")
-        # request.buf里面是经过jpg编码之后的一帧图像
+        # decode the incoming image using OpenCV jpg decoder
         img = cv2.imdecode(np.fromstring(request.buf, dtype=np.uint8), -1)
-        det = {}
         # Run object detection with Yolo v3
+        det = {}
         print("Run Yolo Detector")
         det["yolo"] = self.yolo_detector.detect(img) # return a dict that contains detection result
         print("Run Face Detector")
@@ -73,7 +72,7 @@ def main():
     print("Visual Model Server Listening on port 50051")
     try:
         while True:
-            time.sleep(_ONE_DAY_IN_SECONDS)
+            time.sleep(_ONE_HOUR_IN_SECONDS)
     except KeyboardInterrupt:
         print("Shutting down visual model server")
         server.stop(0)
