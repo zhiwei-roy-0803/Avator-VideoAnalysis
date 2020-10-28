@@ -11,7 +11,7 @@ detection based on [Yolo v3](https://github.com/eriklindernoren/PyTorch-YOLOv3).
 
 **System Architecture**
 
-![](./static/System%20Architecture.png)
+![](./static/System_Architecture.png)
 
 **Key Feature**
 + Object detection is accomplished by [Yolo v3](https://github.com/eriklindernoren/PyTorch-YOLOv3) and pre-trained weights are utilized.
