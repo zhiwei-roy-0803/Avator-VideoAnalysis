@@ -1,10 +1,8 @@
 from django.shortcuts import render, redirect
-# Create your views here.
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
-# 登录界面
-from django.views.decorators.csrf import csrf_protect
+# Login View
 from .form import RegisterForm
 
 def UserLogin(request):
@@ -20,7 +18,7 @@ def UserLogin(request):
     else:
         return render(request, 'login/login.html', context={"message": "Login Fail! Wrong Username or Password!"})
 
-# 注册界面
+# Registration View
 def UserRegister(request):
     received_data = request.POST
     if len(received_data) == 0:

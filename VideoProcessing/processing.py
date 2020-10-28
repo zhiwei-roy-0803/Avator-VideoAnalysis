@@ -7,6 +7,7 @@ import tqdm
 from django.conf import settings
 from .rpc_client import RpcClient
 from .utils import get_frame_with_bbox_face, get_frame_with_bbox_yolo3
+from config import RPC_SERVICE_HOST, RPC_SERVICE_PORT
 
 def audio_process(video_path, audio_path):
     '''
@@ -51,7 +52,7 @@ def visual_process(video_name, video_path):
     # Process video stream in a frame-by-frame fashion. Send each frame to the model server via RPC communications
     print("Processing frames through rpc call...")
     with tqdm.tqdm(total=frame_cnt, unit="frames") as pbar:
-        with RpcClient(host="162.105.85.250", port="50051") as rpc_client:
+        with RpcClient(host=RPC_SERVICE_HOST, port=RPC_SERVICE_PORT) as rpc_client:
             while True:
                 # Extract single frame from the video stream
                 ret, frame = video_stream.read()
@@ -73,9 +74,9 @@ def postproc(tmp_video_path, audio_path, res_video_path):
     '''
     Do some post processing work. Currently, it just combine the audio signal extracted from the original video with
     the processed silent video
-    :param tmp_video_path:
-    :param audio_path:
-    :param res_video_path:
+    :param tmp_video_path: path of intermediate video
+    :param audio_path: path of raw audio
+    :param res_video_path: path of the result video
     :return:
     '''
     cmd = "ffmpeg -y -i {:s} -i {:s} -c:v libx264 -c:a aac {:s}".format(
@@ -84,7 +85,8 @@ def postproc(tmp_video_path, audio_path, res_video_path):
         res_video_path
     )
     print("Combine audio extracted from original video and the processed video...")
-    return subprocess.call(cmd, shell=True)
+    subprocess.call(cmd, shell=True)
+
 
 
 
@@ -117,8 +119,11 @@ def process(video):
         postproc(tmp_video_path, audio_path, res_video_path)
         # Save processed video
         video.save()
-        # # Once finish the combination, remove the intermediate video without audio
-        os.remove(tmp_video_path)
+        # Once finish the combination, remove the intermediate video without audio
+        try:
+            os.remove(tmp_video_path)
+        except:
+            print("Fail to remove intermediate silent video")
         return res
     # Capture any exception and return None
     except Exception as e:

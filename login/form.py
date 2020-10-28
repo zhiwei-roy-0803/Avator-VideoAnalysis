@@ -2,12 +2,12 @@ from django import forms
 
 # Creat forms here
 
-# 用户登录表单
+# Form for user login
 class UserForm(forms.Form):
     username = forms.CharField(label="username", max_length=128)
     password = forms.CharField(label="password", max_length=256, widget=forms.PasswordInput)
 
-# 用户注册表单
+# Form for user registration
 class RegisterForm(forms.Form):
     gender = (
         ('male', "male"),
