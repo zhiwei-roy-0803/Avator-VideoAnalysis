@@ -1,0 +1,8 @@
+face_recognition
+grpcio
+grpcio-tools
+googleapis-common-protos
+djangorestframework
+markdown
+django-filter
+opencv-python
