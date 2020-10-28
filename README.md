@@ -11,7 +11,7 @@ detection based on [Yolo v3](https://github.com/eriklindernoren/PyTorch-YOLOv3).
 
 **System Architecture**
 
-![](https://github.com/CZW123456/Avator-VideoAnalysis/blob/main/static/System%20Architecture.png)
+![](./static/System%20Architecture.png)
 
 **Key Feature**
 + Object detection is accomplished by [Yolo v3](https://github.com/eriklindernoren/PyTorch-YOLOv3) and pre-trained weights are utilized.
