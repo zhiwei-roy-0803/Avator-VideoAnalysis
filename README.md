@@ -2,9 +2,21 @@
 
 
 **How to install**
++ For docker user
+```angular2
 
+```
++ For non-docker user
+```
+bash scripts/seetup.sh
+```
 
 **How to use** 
+```
+python3 start_model_servers.py
+python3 manage.py runserver`
+```
+Entry for web browser: http://localhost:8000/account/login/.
 
 
 **System Architecture**
