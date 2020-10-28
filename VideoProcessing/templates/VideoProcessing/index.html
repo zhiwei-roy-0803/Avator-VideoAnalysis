@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home Page{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="container-fluid" id="content">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <br>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/CZW123456/WebVedioDetection" target="_blank">
+                            Code on Github
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            {% if error %}
+                <div class="alert alert-warning">{{ error }}</div>
+            {% endif %}
+            <div class="mb-2 mb-md-0">
+                <div class="mr-2" id="upload_video">
+                    <form action="upload" method="POST" class="upload_file" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="file" multiple class= "upload_file" name="file" accept="video/*, audio/*">
+                        <p class="upload_file">Click Upload to upload your video.</p>
+                        <button type="submit" class="upload_file">Upload</button>
+                    </form>
+                </div>
+                <br>
+                <table class="table table-striped table-bordered table-hover table-checkable order-column" id="sample_1">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                    <input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" />
+                                    <span></span>
+                                </label>
+                            </th>
+                            <th> Video Filename </th>
+                            <th> Owner
+                            <th> Status </th>
+                            <th> Created Time </th>
+                            <th> Actions </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                            <tr class="odd gradeX">
+                                <td>
+                                    <label class="mt-checkbox mt-checkbox-single mt-checkbox-outline">
+                                        <input type="checkbox" class="checkboxes" value="1"/>
+                                        <span></span>
+                                    </label>
+                                </td>
+                                <td>{{ item.filename }}</td>
+                                <td>{{ item.owner }}</td>
+                                <td>{{ item.status }}</td>
+                                <td>{{ item.creat_time }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-xs green dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"> Actions
+                                            <i class="fa fa-angle-down"></i>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li>
+                                                <a href={% url 'video:original' username=item.owner filename=item.filename %}>
+                                                    <i class="icon-docs"></i> Original </a>
+                                            </li>
+                                            <li>
+                                                <a href={% url 'video:result' username=item.owner filename=item.filename %}>
+                                                    <i class="icon-tag"></i> Result </a>
+                                            </li>
+                                            <li>
+                                                <a href={% url 'video:start' username=item.owner filename=item.filename %}>
+                                                    <i class="icon-user"></i> Start Processing </a>
+                                            </li>
+                                            <li>
+                                                <a href={% url 'video:delete' username=item.owner filename=item.filename %}>
+                                                    <i class="icon-user"></i> Delete </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+            </table>
+            </div>
+            <hr>
+        </main>
+    </div>
+</div>
+{% endblock %}

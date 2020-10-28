@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Login{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="col-md-4 col-md-offset-4">
+            {# message是后端返回的json的一个字段 #}
+            {% if message %}
+                <div class="alert alert-warning">{{ message }}</div>
+            {% endif %}
+            {#form表示HTML5的一个表单或者表格#}
+            <form class='form-login' action={% url 'login:login' %} method="post">
+                 {#加入 csrf_token 为了防止跨站身份伪造攻击CSRF#}
+                 {% csrf_token %}
+                 <h2 class="text-center">Welcome !</h2>
+                 <div class="form-group">
+                     <label for="id_username">Username：</label>
+                     <input type="text" name='username' class="form-control" id="id_username" placeholder="Username" autofocus required>
+                 </div>
+                 <div class="form-group">
+                     <label for="id_password">Password：</label>
+                     <input type="password" name='password' class="form-control" id="id_password" placeholder="Password" required>
+                 </div>
+                 <button type="reset" class="btn btn-default pull-left">Reset</button>
+                 <button type="submit" class="btn btn-primary pull-right">Submit</button>
+            </form>
+        </div>
+    </div> <!-- /container -->
+{% endblock %}
