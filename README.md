@@ -8,7 +8,7 @@ TODO
 ```
 + For non-docker user
 ```
-bash scripts/seetup.sh
+bash scripts/setup.sh
 ```
 
 **How to use** 
